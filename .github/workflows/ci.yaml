@@ -76,7 +76,18 @@ jobs:
             // bigger than this amount of MegaBytes. In case a user relaunch a build, it
             // can prevent regenerating cache if it has already been generated (if it is
             // already generated, it is usually big)
-            const maxMBtoDeleteEntry = -1 // infinite
+            const settings = {
+              maxMBtoDeleteEntry: -1, // infinite
+              branchThatCanWriteInCache: ['develop']
+            }
+            
+            console.log('Settings:')
+            console.log(settings)
+            
+            if (settings.branchThatCanWriteInCache.indexOf(context.ref) === -1) {
+              console.log('Doctor's office is not open')
+              return
+            }
 
             const caches = await github.rest.actions.getActionsCacheList({
               owner: context.repo.owner,
@@ -93,7 +104,7 @@ jobs:
             console.log()
             
             const gradleHomeCacheEntries = caches.data.actions_caches.filter((cache) => {
-              const sizeLimitCheck = maxMBtoDeleteEntry == -1 ? true : cache.size_in_bytes < maxMBtoDeleteEntry*1048576 
+              const sizeLimitCheck = settings.maxMBtoDeleteEntry == -1 ? true : cache.size_in_bytes < settings.maxMBtoDeleteEntry*1048576 
               return cache.key.endsWith(context.sha) && sizeLimitCheck
             })
             
