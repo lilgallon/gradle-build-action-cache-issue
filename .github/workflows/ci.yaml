@@ -84,7 +84,7 @@ jobs:
             console.log('Settings:')
             console.log(settings)
 
-            console.log('Context:)
+            console.log('Context:')
             console.log(context)
             
             if (settings.branchThatCanWriteInCache.indexOf(context.ref) === -1) {
