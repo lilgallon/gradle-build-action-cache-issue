@@ -37,13 +37,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build commons
+      - name: Build common
         uses: gradle/gradle-build-action@v2
         env:
           GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
         with:
           gradle-version: 7.6
-          build-root-directory: systems/commons
+          build-root-directory: systems/common
           arguments: build --parallel --scan -x test "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
           cache-read-only: ${{ github.ref != 'refs/heads/master' }}
 
