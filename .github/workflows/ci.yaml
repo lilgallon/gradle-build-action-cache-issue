@@ -78,16 +78,17 @@ jobs:
             // already generated, it is usually big)
             const settings = {
               maxMBtoDeleteEntry: -1, // infinite
-              branchThatCanWriteInCache: ['master']
+              refThatCanWriteInCache: ['refs/heads/master']
             }
             
             console.log('Settings:')
             console.log(settings)
 
             console.log('Context:')
-            console.log(context)
+            console.log('- ref: ' + context.ref)
+            console.log('- sha: ' + context.sha)
             
-            if (settings.branchThatCanWriteInCache.indexOf(context.ref) === -1) {
+            if (settings.refThatCanWriteInCache.indexOf(context.ref) === -1) {
               console.log('Doctor\'s office is not open')
               return
             }
