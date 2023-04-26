@@ -86,8 +86,7 @@ jobs:
 
             console.log('Context:')
             console.log('- ref: ' + context.ref)
-            console.log('- sha: ' + context.sha)
-            
+
             if (settings.refThatCanWriteInCache.indexOf(context.ref) === -1) {
               console.log('Doctor\'s office is not open')
               return
@@ -101,7 +100,7 @@ jobs:
             })
             
             console.log("We are interested by sha: " + context.sha)
-            console.log("We are also interested by cache entries > " + context.sha)
+            console.log("We are also interested by cache entries < " + settings.maxMBtoDeleteEntry + " MB")
             console.log("Fetched cache entries:")
             console.log()
             console.log(caches.data.actions_caches)
