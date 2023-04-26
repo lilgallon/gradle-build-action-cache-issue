@@ -79,8 +79,11 @@ jobs:
               sort: "created_at"
             })
             
+            console.log("We are interested by sha: " + context.sha)
+            console.log("Fetched cache entries:")
             console.log(caches.data.actions_caches)
-            console.log("sha: " + context.sha)
+            console.log()
+            console.log()
             
             const gradleHomeCacheEntries = caches.data.actions_caches.filter((cache) => {
               return cache.key.endsWith(context.sha)
@@ -93,7 +96,7 @@ jobs:
               console.log("We are going to proceed with a surgical intervention on the cache tumor")
               console.log(gradleHomeCacheEntries[0])
             
-              github.rest.actions.deleteActionsCacheById({
+              const response = github.rest.actions.deleteActionsCacheById({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 cache_id: gradleHomeCacheEntries[0],
