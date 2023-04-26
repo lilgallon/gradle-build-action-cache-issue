@@ -72,6 +72,12 @@ jobs:
           script: |
             console.log("Preparing for consultation on potential cache issues")
 
+            // Can be useful to set this value to prevent deleting cache entries that are
+            // bigger than this amount of MegaBytes. In case a user relaunch a build, it
+            // can prevent regenerating cache if it has already been generated (if it is
+            // already generated, it is usually big)
+            const maxMBtoDeleteEntry = -1 // infinite
+
             const caches = await github.rest.actions.getActionsCacheList({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -80,13 +86,15 @@ jobs:
             })
             
             console.log("We are interested by sha: " + context.sha)
+            console.log("We are also interested by cache entries > " + context.sha)
             console.log("Fetched cache entries:")
-            console.log(caches.data.actions_caches)
             console.log()
+            console.log(caches.data.actions_caches)
             console.log()
             
             const gradleHomeCacheEntries = caches.data.actions_caches.filter((cache) => {
-              return cache.key.endsWith(context.sha)
+              const sizeLimitCheck = maxMBtoDeleteEntry == -1 ? true : cache.size_in_bytes < maxMBtoDeleteEntry*1048576 
+              return cache.key.endsWith(context.sha) && sizeLimitCheck
             })
             
             if (gradleHomeCacheEntries.length == 0) {
@@ -99,7 +107,7 @@ jobs:
               const response = github.rest.actions.deleteActionsCacheById({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                cache_id: gradleHomeCacheEntries[0],
+                cache_id: gradleHomeCacheEntries[0].id,
               })
             
               console.log("The surgical intervention has been a success")
