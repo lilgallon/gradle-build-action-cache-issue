@@ -69,18 +69,44 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            console.log("About to clear")
+            console.log("Preparing for consultation on potential cache issues")
+
             const caches = await github.rest.actions.getActionsCacheList({
               owner: context.repo.owner,
               repo: context.repo.repo,
+              key: "v7-gradle|Linux|build",
+              sort: created_at
             })
-            for (const cache of caches.data.actions_caches) {
-              console.log(cache)
-              /*
+            
+            const gradleHomeCacheEntries = caches.data.actions_caches.filter((cache) => {
+              cache.key.endsWith(context.sha)
+            })
+            
+            if (gradleHomeCacheEntries.length == 0) {
+              console.log("Consultation ended with no issue found, nice!")
+            } else if (gradleHomeCacheEntries.length == 1) {
+              console.log("Consultation ended with one issue found")
+              console.log("We are going to proceed with a surgical intervention on the cache tumor")
+              console.log(gradleHomeCacheEntries[0])
+            
               github.rest.actions.deleteActionsCacheById({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                cache_id: cache.id,
-              })*/
+                cache_id: gradleHomeCacheEntries[0],
+              })
+            
+              console.log("The surgical intervention has been a success")
+            } else {
+              console.log("Consultation ended with multiple tumors found")
+              console.log("It should never happen, proceeding with a surgical intervention on the cache tumors nonetheless")
+              for (const cache of gradleHomeCacheEntries) {
+                console.log(cache)
+                github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+              }
             }
-            console.log("Clear completed")
+            
+            console.log("Doctor consultation terminated, you can go work now")
