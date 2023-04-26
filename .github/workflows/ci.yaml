@@ -16,51 +16,51 @@ on:
 permissions:
   contents: read
 
-  jobs:
-    build:
-      concurrency:
-        group: ${{ github.workflow }}-${{ github.ref }}
-        cancel-in-progress: true
+jobs:
+  build:
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
 
-      runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-      steps:
+    steps:
 
-        - name: Checkout
-          uses: actions/checkout@v3
-          with:
-            repository: lilgallon/gradle-build-action-cache-issue
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: lilgallon/gradle-build-action-cache-issue
 
-        - name: Set up JDK 17
-          uses: actions/setup-java@v3
-          with:
-            java-version: '17'
-            distribution: 'temurin'
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-        - name: Build commons
-          uses: gradle/gradle-build-action@v2
-          env:
-            GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
-          with:
-            gradle-version: 7.6
-            build-root-directory: systems/commons
-            arguments: build --parallel --scan -x test "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
-            cache-read-only: ${{ github.ref != 'refs/heads/master' }}
+      - name: Build commons
+        uses: gradle/gradle-build-action@v2
+        env:
+          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
+        with:
+          gradle-version: 7.6
+          build-root-directory: systems/commons
+          arguments: build --parallel --scan -x test "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
+          cache-read-only: ${{ github.ref != 'refs/heads/master' }}
 
-        - name: Build all
-          uses: gradle/gradle-build-action@v2
-          env:
-            GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
-          with:
-            gradle-version: 7.6
-            arguments: build --parallel --scan -x test "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
-            cache-read-only: ${{ github.ref != 'refs/heads/master' }}
+      - name: Build all
+        uses: gradle/gradle-build-action@v2
+        env:
+          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
+        with:
+          gradle-version: 7.6
+          arguments: build --parallel --scan -x test "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
+          cache-read-only: ${{ github.ref != 'refs/heads/master' }}
 
-        - name: Run tests
-          uses: gradle/gradle-build-action@v2
-          env:
-            GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
-          with:
-            gradle-version: 7.6
-            arguments: test --no-parallel --scan "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
-            cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }}
+      - name: Run tests
+        uses: gradle/gradle-build-action@v2
+        env:
+          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
+        with:
+          gradle-version: 7.6
+          arguments: test --no-parallel --scan "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }}
