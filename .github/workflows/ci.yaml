@@ -44,7 +44,7 @@ jobs:
         with:
           gradle-version: 7.6
           build-root-directory: systems/common
-          arguments: build --parallel --scan -x test "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
+          arguments: build --parallel --no-daemon --scan -x test "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
           cache-read-only: ${{ github.ref != 'refs/heads/master' }}
 
       - name: Build all
@@ -53,7 +53,7 @@ jobs:
           GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
         with:
           gradle-version: 7.6
-          arguments: build --parallel --scan -x test "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
+          arguments: build --parallel --no-daemon --scan -x test "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
           cache-read-only: ${{ github.ref != 'refs/heads/master' }}
 
       - name: Run tests
@@ -62,7 +62,7 @@ jobs:
           GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
         with:
           gradle-version: 7.6
-          arguments: test --no-parallel --scan "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
+          arguments: test --no-parallel --no-daemon --scan "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
           cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }}
 
       - name: Cache doctor
@@ -75,7 +75,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               key: "v7-gradle|Linux|build",
-              sort: created_at
+              sort: "created_at"
             })
             
             const gradleHomeCacheEntries = caches.data.actions_caches.filter((cache) => {
