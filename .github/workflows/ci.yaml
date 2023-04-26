@@ -78,7 +78,7 @@ jobs:
             // already generated, it is usually big)
             const settings = {
               maxMBtoDeleteEntry: -1, // infinite
-              branchThatCanWriteInCache: ['develop']
+              branchThatCanWriteInCache: ['master']
             }
             
             console.log('Settings:')
