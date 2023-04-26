@@ -70,8 +70,6 @@ jobs:
         with:
           script: |
             console.log("Preparing for consultation on potential cache issues")
-            
-            console.log("sha: " + context.sha)
 
             const caches = await github.rest.actions.getActionsCacheList({
               owner: context.repo.owner,
@@ -80,10 +78,11 @@ jobs:
               sort: "created_at"
             })
             
-            console.log(caches)
+            console.log(caches.data.actions_caches)
+            console.log("sha: " + context.sha)
             
             const gradleHomeCacheEntries = caches.data.actions_caches.filter((cache) => {
-              cache.key.endsWith(context.sha)
+              return cache.key.endsWith(context.sha)
             })
             
             if (gradleHomeCacheEntries.length == 0) {
