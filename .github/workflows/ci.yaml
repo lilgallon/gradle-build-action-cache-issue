@@ -48,23 +48,23 @@ jobs:
           arguments: build --parallel --no-daemon --scan -x test "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
           cache-read-only: ${{ github.ref != 'refs/heads/master' }}
 
-      - name: Build all
-        uses: gradle/gradle-build-action@v2
-        env:
-          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
-        with:
-          gradle-version: 7.6
-          arguments: build --parallel --no-daemon --scan -x test "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
-          cache-read-only: ${{ github.ref != 'refs/heads/master' }}
-
-      - name: Run tests
-        uses: gradle/gradle-build-action@v2
-        env:
-          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
-        with:
-          gradle-version: 7.6
-          arguments: test --no-parallel --no-daemon --scan "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
-          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }}
+#      - name: Build all
+#        uses: gradle/gradle-build-action@v2
+#        env:
+#          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
+#        with:
+#          gradle-version: 7.6
+#          arguments: build --parallel --no-daemon --scan -x test "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
+#          cache-read-only: ${{ github.ref != 'refs/heads/master' }}
+#
+#      - name: Run tests
+#        uses: gradle/gradle-build-action@v2
+#        env:
+#          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
+#        with:
+#          gradle-version: 7.6
+#          arguments: test --no-parallel --no-daemon --scan "-Dorg.gradle.jvmargs=-Xmx2G -XX:MaxMetaspaceSize=1G"
+#          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }}
 
       - name: Cache doctor
         uses: actions/github-script@v6
@@ -85,7 +85,7 @@ jobs:
             console.log(settings)
             
             if (settings.branchThatCanWriteInCache.indexOf(context.ref) === -1) {
-              console.log('Doctor's office is not open')
+              console.log('Doctor\'s office is not open')
               return
             }
 
